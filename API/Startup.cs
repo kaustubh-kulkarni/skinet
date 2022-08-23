@@ -22,7 +22,7 @@ namespace API
         private readonly IConfiguration _config;
         public Startup(IConfiguration config)
         {
-            _config = config; 
+            _config = config;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -30,9 +30,11 @@ namespace API
         {
             //Add interface as a service so we can inject them in the controllers
             services.AddScoped<IProductRepository, ProductRepository>();
+            //As we dont know the type and will be known at the time of compilation we reference this like below
+            services.AddScoped(typeof(IGenericRepository<>), (typeof(GenericRepository<>)));
             services.AddControllers();
             //DbContext as a service
-            services.AddDbContext<StoreContext>(x => 
+            services.AddDbContext<StoreContext>(x =>
                 x.UseSqlite(_config.GetConnectionString("DefaultConnection")));
             services.AddSwaggerGen(c =>
             {
